@@ -1,0 +1,77 @@
+/* SRP Admin Styles */
+
+/* Priority & Status Tags in Admin List Table */
+.column-taxonomy-srp_priority_level a,
+.column-taxonomy-srp_request_status a,
+.srp-priority-tag,
+.srp-status-tag {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    color: #fff !important; /* Important to override WordPress link color */
+    font-size: 12px;
+    line-height: 1.4;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+/* Priority Colors */
+.srp-priority-low { background-color: #7ad03a; } /* Green */
+.srp-priority-medium { background-color: #fdb813; } /* Yellow/Orange */
+.srp-priority-high { background-color: #ff6900; } /* Orange */
+.srp-priority-critical { background-color: #dc3232; } /* Red */
+.srp-priority-default { background-color: #a0a5aa; } /* Grey for undefined */
+
+/* Status Colors */
+.srp-status-new { background-color: #0073aa; } /* Blue */
+.srp-status-acknowledged { background-color: #2271b1; }
+.srp-status-ongoing { background-color: #f5a623; } /* Orange/Yellow */
+.srp-status-resolved { background-color: #28a745; } /* Green */
+.srp-status-not-resolved { background-color: #d63638; } /* Red */
+.srp-status-closed { background-color: #6c757d; } /* Grey */
+.srp-status-default { background-color: #a0a5aa; } /* Grey for undefined */
+
+
+/* Meta Box History Log Styles */
+.srp-history-log-wrapper {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ccd0d4;
+    padding: 0;
+    background-color: #fff;
+}
+
+.srp-history-log-wrapper ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.srp-history-log-wrapper .srp-history-entry {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.srp-history-log-wrapper .srp-history-entry:last-child {
+    border-bottom: none;
+}
+
+.srp-history-log-wrapper .srp-history-entry:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.srp-history-log-wrapper .srp-history-timestamp {
+    color: #777;
+    margin-right: 5px;
+}
+
+.srp-history-log-wrapper .srp-history-user {
+    font-weight: bold;
+    color: #333;
+}
+
+.srp-history-log-wrapper .srp-history-action {
+    color: #555;
+}

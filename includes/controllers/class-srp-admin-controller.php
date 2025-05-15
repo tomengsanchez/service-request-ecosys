@@ -123,10 +123,8 @@ class SRP_Admin_Controller {
     }
 
     public function render_custom_column_data($column, $post_id) {
-        // Data fetching would ideally come from the model
-        $request_details = $this->request_model->get_request_details($post_id); // Simplified
+        $request_details = $this->request_model->get_request_details($post_id);
         $post_author_id = get_post_field('post_author', $post_id);
-
 
         switch ($column) {
             case 'srp_subject_col':
@@ -149,6 +147,35 @@ class SRP_Admin_Controller {
             case 'srp_asset_id_col':
                 echo esc_html( $request_details ? $request_details['asset_id'] : '' );
                 break;
+
+            // Handle taxonomy columns to add custom styling spans
+            case 'taxonomy-srp_priority_level':
+                $terms = get_the_terms($post_id, 'srp_priority_level');
+                if (!empty($terms) && !is_wp_error($terms)) {
+                    foreach ($terms as $term) {
+                        $slug_class = 'srp-priority-' . esc_attr($term->slug);
+                        $default_class = 'srp-priority-default'; // Fallback
+                        printf('<span class="srp-priority-tag %s %s">%s</span> ', $slug_class, term_exists($term->slug, 'srp_priority_level') ? '' : $default_class, esc_html($term->name));
+                    }
+                } else {
+                    echo '—';
+                }
+                break;
+
+            case 'taxonomy-srp_request_status':
+                $terms = get_the_terms($post_id, 'srp_request_status');
+                if (!empty($terms) && !is_wp_error($terms)) {
+                    foreach ($terms as $term) {
+                         $slug_class = 'srp-status-' . esc_attr($term->slug);
+                         $default_class = 'srp-status-default'; // Fallback
+                        printf('<span class="srp-status-tag %s %s">%s</span> ', $slug_class, term_exists($term->slug, 'srp_request_status') ? '' : $default_class, esc_html($term->name));
+                    }
+                } else {
+                    echo '—';
+                }
+                break;
+            // WordPress will handle 'taxonomy-srp_service_category' by default if not overridden here.
+            // If you want to style it similarly, add a case for it.
         }
     }
      public function make_columns_sortable( $columns ) {
@@ -170,6 +197,26 @@ class SRP_Admin_Controller {
         if ( '_srp_asset_id' === $orderby ) {
             $query->set( 'meta_key', '_srp_asset_id' );
             $query->set( 'orderby', 'meta_value' );
+        }
+    }
+    /**
+     * Enqueue admin-specific scripts and styles.
+     */
+    public function enqueue_admin_assets( $hook_suffix ) {
+        $current_screen = get_current_screen();
+
+        // Only load on the service request CPT list and edit screens
+        if ( $current_screen &&
+             ( $current_screen->post_type === SRP_POST_TYPE && ( $hook_suffix === 'post.php' || $hook_suffix === 'post-new.php' ) ) ||
+             ( $current_screen->id === 'edit-' . SRP_POST_TYPE )
+            ) {
+            wp_enqueue_style(
+                'srp-admin-style',
+                SRP_PLUGIN_URL . 'assets/css/srp-admin.css',
+                [],
+                // filemtime(SRP_PLUGIN_PATH . 'assets/css/srp-admin.css') // For cache busting
+                '1.3.0' // Plugin version
+            );
         }
     }
 }

@@ -97,4 +97,27 @@ class SRP_Frontend_Controller {
             set_transient('srp_form_error', __( 'There was an error submitting your request: ', 'service-request-plugin' ) . $post_id->get_error_message(), 45);
         }
     }
+    /**
+     * Enqueue frontend scripts and styles.
+     */
+    public function enqueue_frontend_assets() {
+        // Only enqueue if the shortcode is likely to be used or on specific pages.
+        // For broader use, you might check if a post content contains the shortcode.
+        // For simplicity here, we'll enqueue it. A more robust check might be needed.
+        wp_enqueue_style(
+            'srp-frontend-form-style',
+            SRP_PLUGIN_URL . 'assets/css/srp-frontend-form.css',
+            [],
+            // filemtime(SRP_PLUGIN_PATH . 'assets/css/srp-frontend-form.css') // For cache busting
+            '1.3.0' // Plugin version
+        );
+        wp_enqueue_script(
+            'srp-frontend-form-script',
+            SRP_PLUGIN_URL . 'assets/js/srp-frontend-form.js',
+            [], // Dependencies like jQuery if needed: ['jquery']
+            // filemtime(SRP_PLUGIN_PATH . 'assets/js/srp-frontend-form.js'), // For cache busting
+            '1.3.0', // Plugin version
+            true // Load in footer
+        );
+    }
 }

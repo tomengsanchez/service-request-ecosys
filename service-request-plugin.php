@@ -101,6 +101,11 @@ function srp_initialize_plugin() {
     // require_once SRP_PLUGIN_PATH . 'includes/controllers/class-srp-plugin-controller.php';
     // register_uninstall_hook( SRP_PLUGIN_FILE, ['SRP_Plugin_Controller', 'uninstall'] );
 
+    // In service-request-plugin.php, inside srp_initialize_plugin() function:
+
+    // ... (other hooks for frontend_controller)
+    add_action( 'wp_enqueue_scripts', [ $frontend_controller, 'enqueue_frontend_assets' ] );
+
 
     add_action( 'init', [ $plugin_controller, 'register_post_types_and_taxonomies' ] );
     add_action( 'init', [ $plugin_controller, 'load_textdomain' ] );
@@ -120,6 +125,22 @@ function srp_initialize_plugin() {
     // Register hooks for frontend controller (shortcodes)
     add_shortcode( 'service_request_form', [ $frontend_controller, 'render_service_request_form' ] );
     add_action( 'template_redirect', [ $frontend_controller, 'handle_form_submission' ] );
+
+    // In service-request-plugin.php, inside srp_initialize_plugin() function:
+
+    // Register hooks for admin controller
+    if ( is_admin() ) {
+        add_action( 'admin_enqueue_scripts', [ $admin_controller, 'enqueue_admin_assets' ] ); // ADD THIS LINE
+        add_action( 'add_meta_boxes', [ $admin_controller, 'add_meta_boxes' ] );
+        // ... rest of the admin controller hooks
+    }
+
+    // ...
+
+    // Register hooks for frontend controller (shortcodes)
+    add_shortcode( 'service_request_form', [ $frontend_controller, 'render_service_request_form' ] );
+    add_action( 'template_redirect', [ $frontend_controller, 'handle_form_submission' ] );
+    add_action( 'wp_enqueue_scripts', [ $frontend_controller, 'enqueue_frontend_assets' ] ); // THIS LINE WAS ADDED IN STEP 3 - CONFIRM IT'S THERE
 
 }
 // Ensure controllers are loaded before 'plugins_loaded' if their methods are called directly by hooks like uninstall
